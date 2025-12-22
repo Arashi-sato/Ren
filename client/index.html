@@ -20,18 +20,19 @@
 <script src="../common/firebase.js"></script>
 <script>
 function login() {
-  const email = email.value;
-  const password = password.value;
+  const emailVal = document.getElementById("email").value;
+  const passVal = document.getElementById("password").value;
 
-  auth.signInWithEmailAndPassword(email, password)
+  auth.signInWithEmailAndPassword(emailVal, passVal)
     .then(() => location.href = "book.html")
     .catch(() => {
-      auth.createUserWithEmailAndPassword(email, password)
+      auth.createUserWithEmailAndPassword(emailVal, passVal)
         .then(() => location.href = "book.html")
         .catch(err => msg.innerText = err.message);
     });
 }
 </script>
+  
 
 </body>
 </html>
