@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Agent Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../common/style.css">
+</head>
+<body>
+
+<div class="container">
+  <h2>New Requests</h2>
+  <div id="list"></div>
+</div>
+
+<script src="../common/firebase.js"></script>
+<script>
+auth.onAuthStateChanged(user => {
+  if (!user) location.href = "login.html";
+  loadRequests();
+});
+
+function loadRequests() {
+  db.ref("bookings").on("value", snap => {
+    list.innerHTML = "";
+    snap.forEach(b => {
+      const data = b.val();
+      if (data.status === "requested") {
+        list.innerHTML += `
+          <div class="card">
+            <b>${data.service}</b>
+            <p>${data.address}</p>
+            <button onclick="accept('${b.key}')">Accept</button>
+          </div>`;
+      }
+    });
+  });
+}
+
+function accept(id) {
+  const uid = auth.currentUser.uid;
+  db.ref("bookings/" + id).update({
+    agentId: uid,
+    status: "accepted"
+  });
+}
+</script>
+
+</body>
+</html>
