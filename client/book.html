@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Book Service</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../common/style.css">
+</head>
+<body>
+
+<div class="container">
+  <div class="card">
+    <h2>Book Home Service</h2>
+
+    <select id="service">
+      <option>Facial</option>
+      <option>Hair Cut</option>
+      <option>Makeup</option>
+      <option>Custom Request</option>
+    </select>
+
+    <input id="address" placeholder="Your Address">
+    <button onclick="book()">Book Now</button>
+
+    <div class="status" id="status"></div>
+  </div>
+</div>
+
+<script src="../common/firebase.js"></script>
+<script>
+auth.onAuthStateChanged(user => {
+  if (!user) location.href = "index.html";
+});
+
+function book() {
+  const user = auth.currentUser;
+  const id = Date.now();
+
+  db.ref("bookings/" + id).set({
+    clientId: user.uid,
+    service: service.value,
+    address: address.value,
+    status: "requested",
+    time: new Date().toISOString()
+  });
+
+  status.innerText = "✅ Booking requested!";
+}
+</script>
+
+</body>
+</html>
